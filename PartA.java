@@ -1,4 +1,8 @@
-import java.sql.SQLOutput;
+/*
+Author: Min Kim
+Program Description: Hangman games: 1 normal selected from a list of 10 fruits, and another one that cheats by dodging the user's guesses. For the cheating one, uncomment line 310 to see your progress as you play.
+Date: 11/3/23
+ */
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Arrays;
@@ -44,12 +48,15 @@ public class PartA {
         boolean cont_again = true;
         int game = 0;
         boolean cont_game = true;
+        String x = null;
+        String again = "";
         System.out.println("Welcome to Part A of Hangman!");
 
         while (cont == true) {
             while (cont_game == true) {
                 System.out.println("Regular Hangman (1) or Evil Hangman (2)?");
                 game = scanner.nextInt();
+                x = scanner.nextLine();
                 if (game == 1) {
                     regularHangman(words);
                     break;
@@ -64,11 +71,11 @@ public class PartA {
             }
             while (cont_again == true) {
                 System.out.println("Play again? (y/n)");
-                String again = scanner.nextLine();
-                if (again.equals("y")) {
+                again = scanner.nextLine();
+                if (again.charAt(0) == 'y') {
                     break;
                 }
-                else if (again.equals("n")) {
+                else if (again.charAt(0) == 'n') {
                     cont_again = false;
                     cont = false;
                 }
@@ -86,92 +93,97 @@ public class PartA {
         Scanner scanner = new Scanner(System.in);
         String letter;
         int wrongth = 0;
+        int numRight = 0;
         String correctWord = words[(int)((Math.random()*10))];
         char [] wordArray = new char[correctWord.length()];
-
         for (int i = 0; i < correctWord.length(); ++i) {
-            wordArray[i] = '-';
+            wordArray[i] = '_';
         }
-        System.out.println(hangMan[0]);
-        System.out.println("-----------");
-        System.out.println("|          ");
-        System.out.println("|         ");
-        System.out.println("|         ");
-        System.out.println("|");
-        System.out.println("----");
         while (cont) {
-            System.out.print("Letters used: ");
-            for (String s: lettersUsed) {
-                System.out.print(s + " ");
-            }
-            System.out.println();
-            for (char i : wordArray) {
-                System.out.print(i);
-            }
-            System.out.println();
             System.out.print("Enter letter: ");
             letter = scanner.nextLine();
+            boolean newLetter = true;
             if (letter.length() == 1 && Character.isLetter(letter.charAt(0))) {//input validation
                 for (String c: lettersUsed) {
                     if (c.charAt(0) == letter.charAt(0)) {//if letter has already been used
-                        System.out.println("Letter has already been guessed");
+                        newLetter = false;
                     }
                 }
-                int[] indexes = new int[correctWord.length()];
-                boolean isEmpty = true;
-                for (int i = 0; i < correctWord.length(); ++i) {//every index of correctWord that is letter is 1 in indexes array
-                    if (correctWord.charAt(i) == letter.charAt(0)) {
-                        indexes[i] = 1;
+                for (char c : wordArray) {
+                    if (c == letter.charAt(0)) {
+                        newLetter = false;
                     }
                 }
-                // Checking if the int array is  empty
-                for (int i : indexes) {
-                    if (i != 0) {
-                        isEmpty = false;
-                        break;
-                    }
-                }
-                if (isEmpty) {//if there are no instances of the letter in the correct word
-                    System.out.println("Not in word");
-                    lettersUsed.add(letter);
-                    Collections.sort(lettersUsed);
-
-                    hangMan[wrongth] = bodyParts[wrongth];
-                    ++wrongth;
-                    //make hangman
-                }
-                else {//if the letter exists in the correct word
-                    for (int i = 0; i < correctWord.length(); ++i) {
-                        if (indexes[i] == 1) {
-                            wordArray[i] = letter.charAt(0);//
+                if (newLetter) {
+                    int[] indexes = new int[correctWord.length()];
+                    boolean isEmpty = true;
+                    for (int i = 0; i < correctWord.length(); ++i) {//every index of correctWord that is letter is 1 in indexes array
+                        if (correctWord.charAt(i) == letter.charAt(0)) {
+                            indexes[i] = 1;
                         }
                     }
-                }
-                int numRight = 0;
-                for (char c : wordArray) {
-                    if (c != '-') {
-                        ++numRight;
+                    // Checking if the int array is  empty
+                    for (int i : indexes) {
+                        if (i != 0) {
+                            isEmpty = false;
+                            break;
+                        }
+                    }
+                    if (isEmpty) {//if there are no instances of the letter in the correct word
+                        System.out.println("Not in word");
+                        lettersUsed.add(letter);
+                        Collections.sort(lettersUsed);
+
+                        hangMan[wrongth] = bodyParts[wrongth];
+                        ++wrongth;
+                        //make hangman
+                    }
+                    else {//if the letter exists in the word
+                        for (int i = 0; i < correctWord.length(); ++i) {
+                            if (indexes[i] == 1) {
+                                wordArray[i] = letter.charAt(0);//
+                            }
+                        }
+                    }
+                    System.out.println("-----------");
+                    System.out.print("|          ");
+                    System.out.println(hangMan[0]);
+                    System.out.print("|         ");
+                    System.out.print(hangMan[1]);
+                    System.out.print(hangMan[2]);
+                    System.out.println(hangMan[3]);
+                    System.out.print("|         ");
+                    System.out.print(hangMan[4]);
+                    System.out.println(" " + hangMan[5]);
+                    System.out.println("|");
+                    System.out.println("----");
+
+                    System.out.print("Letters used: ");
+                    for (String s: lettersUsed) {
+                        System.out.print(s + " ");
+                    }
+                    System.out.println();
+                    for (char i : wordArray) {
+                        System.out.print(i);
+                    }
+                    System.out.println();
+                    numRight = 0;
+                    for (char c : wordArray) {
+                        if (c != '_') {
+                            ++numRight;
+                        }
+                    }
+                    if (numRight == correctWord.length()) {
+                        System.out.println("You found the word!");
+                        return;
+                    }
+                    if (wrongth == 6) {
+                        System.out.println("You lose!");
+                        return;
                     }
                 }
-                if (numRight == correctWord.length()) {
-                    System.out.println("You found the word!");
-                    return;
-                }
-                System.out.println("-----------");
-                System.out.print("|          ");
-                System.out.println(hangMan[0]);
-                System.out.print("|         ");
-                System.out.print(hangMan[1]);
-                System.out.print(hangMan[2]);
-                System.out.println(hangMan[3]);
-                System.out.print("|         ");
-                System.out.print(hangMan[4]);
-                System.out.println(" " + hangMan[5]);
-                System.out.println("|");
-                System.out.println("----");
-                if (wrongth == 6) {
-                    System.out.println("You lose!");
-                    return;
+                else {
+                    System.out.println("Letter has already been guessed");
                 }
             }
             else {
@@ -181,109 +193,130 @@ public class PartA {
     }
     public static void evilHangman(ArrayList<String> evil_words) {
         ArrayList <String> lettersUsed = new ArrayList<>();
-
+        boolean newLetter = true;
         Scanner scanner = new Scanner(System.in);
         boolean validInput = false;
         int length = 0;
         int guesses = 0;
-        while (validInput == false) {//get length of word
+        int wrongth = 0;
+        String lengthInput = null;
+        String guessInput = null;
+        String scannerCleanup = null;
+        while (!validInput) {//get length of word
             System.out.print("Length of word (1-18): ");//get length of word
-            if (scanner.hasNextInt()) {
-                length = scanner.nextInt();
+            lengthInput = scanner.nextLine();
+            try {
+                length = Integer.parseInt(lengthInput);
                 if ((length > 0) && (length <= 18)) {
-                    char[] charArray = new char[length];//make array for word
-                    break;
+                    validInput = true;
                 }
-                System.out.println("Please enter a number 1-18");
-            }
-            else {
-                System.out.println("Please enter an integer");
+                else {
+                    System.out.println("Please enter a number 1-18");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter an integer.");
             }
         }
-        while (validInput == false) {
+        char[] charArray = new char[length];//make array for word
+        validInput = false;
+        while (!validInput) {
             System.out.print("Number of guesses: ");//get number of guesses
-            if (scanner.hasNextInt()) {
-                guesses = scanner.nextInt();
-                break;
-            }
-            else {
-                System.out.println("Please enter an integer");
+            guessInput = scanner.nextLine();
+            try {
+                guesses = Integer.parseInt(guessInput);
+                if (guesses > 0) {
+                    validInput = true;
+                }
+                else {
+                    System.out.println("Please enter a number above 0.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter an integer.");
             }
         }
+        validInput = false;
         ArrayList<String> optimalList = new ArrayList<>();
         for (String element: evil_words) {//get all the words that are that long
             if (element.length() == length) {
                 optimalList.add(element);
             }
         }
-        System.out.println("There are " + optimalList.size() + " possible words.");
         String letter = "";
         ArrayList <String> noLetter = new ArrayList<>();
         String theWord = "";
         char [] wordArray = new char[length];
+        int numRight = 0;
         for (int i = 0; i < length; ++i) {
-            wordArray[i] = '-';
+            wordArray[i] = '_';
         }
-        Scanner scanner2 = new Scanner(System.in);//had to create a new scanner so that java would wait to get an input to get letter
         boolean guess = true;
+        System.out.println("---------------------------------------");
         while (guess) {
-            while (validInput == false) {
+            while (!validInput) {
+                newLetter = true;
+                //print out the letters used
                 System.out.print("Letters used: ");
-
                 for (String s: lettersUsed) {
                     System.out.print(s + " ");
                 }
                 System.out.println();
+
+                System.out.print("Guesses left: ") ;
+                System.out.println(guesses-wrongth);
+                //get new letter input
                 System.out.print("Enter letter: ");
-                letter = scanner2.nextLine();
+                letter = scanner.nextLine();
                 if (letter.length() == 1 && Character.isLetter(letter.charAt(0))) {//if it is a valid letter
                     for (String c: lettersUsed) {
                         if (c.charAt(0) == letter.charAt(0)) {//if letter has already been used
-                            System.out.println("Letter has already been guessed");
-                            //add something to terminate this letter
+                            newLetter = false;
                         }
                     }
-                    optimalList = makeList(optimalList, length, letter);//get word group with most amount of words
-                    int numRight = 0;
                     for (char c : wordArray) {
-                        if (c != '-') {
-                            ++numRight;
+                        if (c == letter.charAt(0)) {
+                            newLetter = false;
                         }
                     }
-                    if (numRight == length) {
-                        System.out.println("You found the word!");
-                        return;
-                    }
-                    if (optimalList.get(0).indexOf(letter) == -1) {
-                        ++guesses;
-                        System.out.println("Not in word");
-                        lettersUsed.add(letter);
-                        Collections.sort(lettersUsed);
-                    }
-                    else {
-                        for (int i = 0; i < length; ++i) {
-                            if (optimalList.get(0).charAt(i) == letter.charAt(0)) {
-                                wordArray[i] = letter.charAt(0);
+                    if (newLetter) {
+                        optimalList = makeList(optimalList, length, letter);//get word group with most amount of words
+                        if (optimalList.get(0).indexOf(letter) == -1) {
+                            ++wrongth;
+                            if (guesses == wrongth) {
+                                System.out.print("You lose. ");
+                                theWord = optimalList.get((int)(Math.random()*(optimalList.size())));
+                                System.out.println("The word was: " + theWord);
+                                return;
+                            }
+                            System.out.println("Not in word");
+                            lettersUsed.add(letter);
+                            Collections.sort(lettersUsed);
+                        }
+                        else {
+                            for (int i = 0; i < length; ++i) {
+                                if (optimalList.get(0).charAt(i) == letter.charAt(0)) {
+                                    ++numRight;
+                                    if (numRight == length) {
+                                        System.out.println("You found the word!");//win game
+                                        return;
+                                    }
+                                    wordArray[i] = letter.charAt(0);
+                                }
                             }
                         }
+                        for (int i = 0; i < length; ++i) {//print out word array
+                            System.out.print(wordArray[i]);
+                        }
+                        System.out.println();
+                        //System.out.println("There are " + optimalList.size() + " possible words.");
                     }
-
-                    for (int i = 0; i < length; ++i) {
-                        System.out.print(wordArray[i]);
+                    else {
+                        System.out.println("Letter has already been guessed");
                     }
-                    System.out.println();
-                    System.out.println("There are " + optimalList.size() + " possible words.");
-
-                    break;
                 }
                 else {
                     System.out.println("Please enter a letter");
                 }
-            }
-            if (guesses == 0) {
-                //get random word from list
-                theWord = optimalList.get((int)(Math.random()*(optimalList.size())));
-                System.out.println("The word was: " + theWord);
+                System.out.println("----------------------------");
             }
         }
     }
@@ -327,23 +360,23 @@ public class PartA {
 
             if (matchFound == false) {
                 //if it did not find a match
-                System.out.println("MAKING NEW ARRAYLIST");
-                System.out.println("size of wordgroups1: " + wordGroups.size());
+                //System.out.println("MAKING NEW ARRAYLIST");
+                //System.out.println("size of wordgroups1: " + wordGroups.size());
                 ArrayList<String> list = new ArrayList<String>();
                 list.add(element);
                 wordGroups.add(list);
             }
             matchFound = false;
         }
-        System.out.println("size of wordgroups2: " + wordGroups.size());
-        print2DArrayList(wordGroups);
+        //System.out.println("size of wordgroups2: " + wordGroups.size());
+        //print2DArrayList(wordGroups);
         int largestArrayListIndex = 0;
         for (int i = 0; i < wordGroups.size(); ++i) {
             if (wordGroups.get(i).size() > wordGroups.get(largestArrayListIndex).size()) {
                 largestArrayListIndex = i;
             }
         }
-        System.out.println("index of largest arraylist: " + largestArrayListIndex);
+        //System.out.println("index of largest arraylist: " + largestArrayListIndex);
         return wordGroups.get(largestArrayListIndex);
     }
 
