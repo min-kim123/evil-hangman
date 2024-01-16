@@ -1,6 +1,6 @@
 /*
 Author: Min Kim
-Program Description: Hangman games: 1 normal selected from a list of 10 fruits, and another one that cheats by dodging the user's guesses. For the cheating one, uncomment line 310 to see your progress as you play.
+Program Description: Hangman games: 1 normal selected from a list of 10 fruits and another one that cheats by dodging the user's guesses. For the cheating one, uncomment line 310 to see your progress as you play.
 Date: 11/3/23
  */
 import java.util.ArrayList;
@@ -179,6 +179,7 @@ public class PartA {
                     }
                     if (wrongth == 6) {
                         System.out.println("You lose!");
+                        System.out.println("The word was: " + correctWord);
                         return;
                     }
                 }
