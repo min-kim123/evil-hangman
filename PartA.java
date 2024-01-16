@@ -1,6 +1,7 @@
 /*
 Author: Min Kim
-Program Description: Hangman games: 1 normal selected from a list of 10 fruits and another one that cheats by dodging the user's guesses. For the cheating one, uncomment line 310 to see your progress as you play.
+Program Description: Hangman games: 1 normal selected from a list of 10 fruits and another one that cheats by dodging the user's guesses.
+For the cheating one, uncomment line 311 to see your progress as you play.
 Date: 11/3/23
  */
 import java.util.ArrayList;
@@ -204,11 +205,11 @@ public class PartA {
         String guessInput = null;
         String scannerCleanup = null;
         while (!validInput) {//get length of word
-            System.out.print("Length of word (1-18): ");//get length of word
+            System.out.print("Length of word (1-15): ");//get length of word
             lengthInput = scanner.nextLine();
             try {
                 length = Integer.parseInt(lengthInput);
-                if ((length > 0) && (length <= 18)) {
+                if ((length > 0) && (length <= 15)) {
                     validInput = true;
                 }
                 else {
@@ -308,7 +309,7 @@ public class PartA {
                             System.out.print(wordArray[i]);
                         }
                         System.out.println();
-                        //System.out.println("There are " + optimalList.size() + " possible words.");
+                        System.out.println("There are " + optimalList.size() + " possible words.");
                     }
                     else {
                         System.out.println("Letter has already been guessed");
